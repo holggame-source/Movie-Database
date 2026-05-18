@@ -1,31 +1,32 @@
 {
   "expo": {
-    "name": "Cinebase",
-    "slug": "cinebase",
+    "name": "PSFDB",
+    "slug": "PSFDB",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "fastshot",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": false
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#10192b"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "package": "com.example.movieapp"
     },
-    "web": {
-      "bundler": "metro",
-      "output": "single",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [],
-    "experiments": {
-      "typedRoutes": true
-    }
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ]
   }
 }
