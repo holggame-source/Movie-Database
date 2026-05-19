@@ -25,6 +25,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Fix Reanimated Babel plugin
+        run: |
+          cat > babel.config.js << 'EOF'
+          module.exports = function(api) {
+            api.cache(true);
+            return {
+              presets: ['babel-preset-expo'],
+              plugins: [
+                'react-native-reanimated/plugin',
+              ],
+            };
+          };
+          EOF
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform android
 
