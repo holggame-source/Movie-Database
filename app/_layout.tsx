@@ -14,7 +14,7 @@ export default function RootLayout() {
     // Timeout als Sicherheitsnetz falls etwas nicht lädt
     const timer = setTimeout(() => {
       SplashScreen.hideAsync();
-    }, 500);
+    }, 2000); // 2 Sekunden warten
     return () => clearTimeout(timer);
   }, []);
 
