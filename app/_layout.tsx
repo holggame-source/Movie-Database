@@ -1,44 +1,44 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/Colors';
+import { useEffect, useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [error, setError] = useState<string>('Lädt...');
 
   useEffect(() => {
-    // Timeout als Sicherheitsnetz falls etwas nicht lädt
-    const timer = setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 2000); // 2 Sekunden warten
-    return () => clearTimeout(timer);
+    const run = async () => {
+      try {
+        setError('Schritt 1: GestureHandler...');
+        const { GestureHandlerRootView } = await import('react-native-gesture-handler');
+        
+        setError('Schritt 2: SafeArea...');
+        const { SafeAreaProvider } = await import('react-native-safe-area-context');
+        
+        setError('Schritt 3: Colors...');
+        const { Colors } = await import('@/constants/Colors');
+        
+        setError('Schritt 4: Store...');
+        const store = await import('@/store');
+        
+        setError('✅ Alles OK - starte App...');
+        await SplashScreen.hideAsync();
+        
+      } catch (e: any) {
+        setError('❌ FEHLER: ' + e.message);
+        await SplashScreen.hideAsync();
+      }
+    };
+    run();
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: Colors.background },
-            animation: 'slide_from_right',
-          }}
-        >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="films/[id]" />
-          <Stack.Screen name="films/add" />
-          <Stack.Screen name="films/edit/[id]" />
-          <Stack.Screen name="actresses/[id]" />
-          <Stack.Screen name="actresses/add" />
-          <Stack.Screen name="actresses/edit/[id]" />
-          <Stack.Screen name="favorites" />
-        </Stack>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center', padding: 20 }}>
+      <ScrollView>
+        <Text style={{ color: '#fff', fontSize: 16 }}>{error}</Text>
+      </ScrollView>
+    </View>
   );
 }
