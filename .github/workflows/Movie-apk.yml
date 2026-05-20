@@ -25,6 +25,53 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+              - name: Fix Typography imports
+        run: |
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            const files = [
+              'app/favorites.tsx',
+              'app/films/add.tsx',
+              'app/films/edit/[id].tsx',
+              'app/(tabs)/actresses.tsx',
+              'app/(tabs)/categories.tsx',
+              'app/actresses/[id].tsx',
+              'app/actresses/add.tsx',
+              'app/actresses/edit/[id].tsx',
+              'app/films/[id].tsx',
+              'components/actress-card.tsx',
+              'components/film-card.tsx',
+              'components/category-chip.tsx',
+              'components/empty-state.tsx',
+              'components/filter-section.tsx',
+              'components/filter-button.tsx',
+              'components/search-bar.tsx',
+              'components/filter-bottom-sheet.tsx',
+              'components/alternate-field-list.tsx',
+            ];
+            
+            files.forEach(f => {
+              if (!fs.existsSync(f)) return;
+              let content = fs.readFileSync(f, 'utf8');
+              const original = content;
+              
+              // Entferne Typography import
+              content = content.replace(/import\s*\{[^}]*Fonts[^}]*\}\s*from\s*['\"]\@\/constants\/Typography['\"];?\n?/g, '');
+              content = content.replace(/import\s*\{[^}]*FontMap[^}]*\}\s*from\s*['\"]\@\/constants\/Typography['\"];?\n?/g, '');
+              
+              // Ersetze Fonts.bold, Fonts.regular etc. mit 'System'
+              content = content.replace(/fontFamily:\s*Fonts\.\w+/g, \"fontFamily: 'System'\");
+              content = content.replace(/fontFamily:\s*Fonts\[\w+\]/g, \"fontFamily: 'System'\");
+              
+              if (content !== original) {
+                fs.writeFileSync(f, content);
+                console.log('Fixed: ' + f);
+              }
+            });
+          "
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform android
 
